@@ -99,13 +99,37 @@ public:
             std::exit(EXIT_FAILURE);
         }
 
-        if (!logoTexture.loadFromFile("textures/logoBleu.png")) {
+        if (!logoBleuTexture.loadFromFile("textures/logoBleu.png")) {
+            std::cerr << "Erreur de chargement de l'image du logo des JO." << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+
+        if (!logoNoirTexture.loadFromFile("textures/logoNoir.png")) {
+            std::cerr << "Erreur de chargement de l'image du logo des JO." << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+
+        if (!logoRougeTexture.loadFromFile("textures/logoRouge.png")) {
+            std::cerr << "Erreur de chargement de l'image du logo des JO." << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+
+        if (!logoJauneTexture.loadFromFile("textures/logoJaune.png")) {
+            std::cerr << "Erreur de chargement de l'image du logo des JO." << std::endl;
+            std::exit(EXIT_FAILURE);
+        }
+
+        if (!logoVertTexture.loadFromFile("textures/logoVert.png")) {
             std::cerr << "Erreur de chargement de l'image du logo des JO." << std::endl;
             std::exit(EXIT_FAILURE);
         }
 
         mapSprite.setTexture(mapTexture);
-        logoSprite.setTexture(logoTexture);
+        logoBleuSprite.setTexture(logoBleuTexture);
+        logoNoirSprite.setTexture(logoNoirTexture);
+        logoRougeSprite.setTexture(logoRougeTexture);
+        logoJauneSprite.setTexture(logoJauneTexture);
+        logoVertSprite.setTexture(logoVertTexture);
     }
 
     void run() {
@@ -119,11 +143,30 @@ public:
 private:
     sf::RenderWindow window;
     sf::Texture mapTexture;
-    sf::Texture logoTexture;
+    sf::Texture logoBleuTexture;
+    sf::Texture logoNoirTexture;
+    sf::Texture logoRougeTexture;
+    sf::Texture logoJauneTexture;
+    sf::Texture logoVertTexture;
+
+
     sf::Sprite mapSprite;
-    sf::Sprite logoSprite;
-    float mapScale = 1.0f;
-    sf::FloatRect rectangleBounds{1028, 174, 1446 - 1028, 377 - 174};
+    sf::Sprite logoBleuSprite;
+    sf::Sprite logoNoirSprite;
+    sf::Sprite logoRougeSprite;
+    sf::Sprite logoJauneSprite;
+    sf::Sprite logoVertSprite;
+
+    // Définition des rectangles de sélection des continents
+    sf::FloatRect rectangleEurope{1028, 174, 1446 - 1028, 377 - 174};
+    sf::FloatRect rectangleAfrique{1110, 424, 1538 - 1110, 1538 - 424};
+    sf::FloatRect rectangleAmerique{352, 181, 969 - 352, 1052 - 181};
+    sf::FloatRect rectangleAsie{1523, 302, 2258 - 1523, 724 - 302};
+    sf::FloatRect rectangleOceanie{2021, 728, 2548 - 2021, 1034 - 728};
+
+    sf::Font font;
+
+
     Continent countryList;
 
     void handleEvents() {
@@ -133,14 +176,38 @@ private:
                 window.close();
             }
 
+            // Gestion des événements de souris
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    // Obtention des coordonnées du clic de souris
+                    sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+                    // Vous pouvez maintenant utiliser les coordonnées de la souris pour interagir avec la carte
+                    // Par exemple, afficher les coordonnées dans la console
+                    std::cout << "Clic de souris à la position : " << (int)mousePosition.x << ", " << (int)mousePosition.y << std::endl;
+                }
+            }
+
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-                    if (rectangleBounds.contains(mousePosition)) {
+                    if (rectangleEurope.contains(mousePosition)) {
                         // Afficher la liste des pays
                         countryList.setList();
-                    } else {
+                    } else if (rectangleAfrique.contains(mousePosition)) {
+                        countryList.setList();
+                    }
+                    else if (rectangleAmerique.contains(mousePosition)) {
+                        countryList.setList();
+                    }
+                    else if (rectangleAsie.contains(mousePosition)) {
+                        countryList.setList();
+                    }
+                    else if (rectangleOceanie.contains(mousePosition)) {
+                        countryList.setList();
+                    }
+                    else {
                         // Cacher la liste si le clic est en dehors de la zone du rectangle
                         countryList.hideList();
                     }
@@ -160,11 +227,45 @@ private:
         // Affichage de la carte
         window.draw(mapSprite);
 
+        if (!font.loadFromFile("fonts/leaguespartan-bold.ttf")) {
+            std::cout << "Erreur lors du chargement de la police" << std::endl;
+        }
+
+
         // Affichage du rectangle opaque avec le logo des JO si le curseur est dans la zone
-        if (rectangleBounds.contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
-            logoSprite.setPosition(rectangleBounds.left, rectangleBounds.top);
-            logoSprite.setColor(sf::Color(255, 255, 255, 128)); // Blanc avec une opacité de 128
-            window.draw(logoSprite);
+        if (rectangleEurope.contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+            logoBleuSprite.setPosition(rectangleEurope.left, rectangleEurope.top);
+            logoBleuSprite.setColor(sf::Color(255, 255, 255, 128)); // Blanc avec une opacité de 128
+            window.draw(logoBleuSprite);
+            sf::Text textEurope;
+            textEurope.setFont(font);
+            textEurope.setString("Europe");
+            textEurope.setCharacterSize(24);
+            textEurope.setFillColor(sf::Color::White);
+            textEurope.setPosition(rectangleEurope.left + 10, rectangleEurope.top + 10);
+            window.draw(textEurope);
+            window.draw(logoVertSprite);
+        }
+        if (rectangleAfrique.contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+            logoNoirSprite.setPosition(rectangleAfrique.left, rectangleAfrique.top);
+            logoNoirSprite.setColor(sf::Color(255, 255, 255, 128)); // Blanc avec une opacité de 128
+            window.draw(logoNoirSprite);
+        }
+        if (rectangleAmerique.contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+            logoRougeSprite.setPosition(rectangleAmerique.left, rectangleAmerique.top);
+            logoRougeSprite.setColor(sf::Color(255, 255, 255, 128)); // Blanc avec une opacité de 128
+            window.draw(logoRougeSprite);
+        }
+        if (rectangleAsie.contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+            logoJauneSprite.setPosition(rectangleAsie.left, rectangleAsie.top);
+            logoJauneSprite.setColor(sf::Color(255, 255, 255, 128)); // Blanc avec une opacité de 128
+            window.draw(logoJauneSprite);
+        }
+        if (rectangleOceanie.contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) {
+            logoVertSprite.setPosition(rectangleOceanie.left, rectangleOceanie.top);
+            logoVertSprite.setColor(sf::Color(255, 255, 255, 128)); // Blanc avec une opacité de 128
+
+
         }
 
         // Affichage de la liste des pays
