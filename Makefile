@@ -1,7 +1,7 @@
 LIBS=-lsfml-graphics -lsfml-window -lsfml-system
 CXX := g++
 
-all: main
+all: jomap
 
 %.o: %.cpp
 	$(CXX) -c $< -o $@
@@ -9,9 +9,9 @@ all: main
 %.o: %.h
 	$(CXX) -c $< -o $@
 
-main: main.o
+jomap: main.o Country.o
 	@echo "** Building the game"
-	$(CXX) -o main main.o $(LIBS)
+	$(CXX) -o jomap main.o Country.o $(LIBS)
 
 clean:
 	@echo "** Removing object files and executable..."

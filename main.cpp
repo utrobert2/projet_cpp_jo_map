@@ -1,16 +1,51 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <string>
+
+#include "Country.h"
 
 class CountryList {
 public:
-    CountryList(sf::RenderWindow& window) : window(window) {
-        // Remplissez ici la liste des pays (ce peut être une liste préétablie ou dynamique)
-        countries = {"Allemagne", "Armenie", "Autriche", "Azerbaijan", "Belgique", "Bosnie-Herzégovine", "Bulgarie", "Croatie", "Danemark", "Espagne", "Estonie", "Finlande", "France", "Géorgie", "Grande-Bretagne", "Grèce", "Hongrie", "Irlande", "Italie", "Lituanie", "Moldavie", "Norvège", "Pays-Bas", "Pologne", "Portugal", "Roumanie", "Serbie", "Slovaquie", "Slovénie", "Suède", "Suisse", "Tchéquie", "Turquie", "Ukraine"};
+    CountryList(sf::RenderWindow &window) : window(window) {
+        countries = {{"Allemagne"},
+                     {"Armenie"},
+                     {"Autriche"},
+                     {"Azerbaijan"},
+                     {"Belgique"},
+                     {"Bosnie-Herzégovine"},
+                     {"Bulgarie"},
+                     {"Croatie"},
+                     {"Danemark"},
+                     {"Espagne"},
+                     {"Estonie"},
+                     {"Finlande"},
+                     {"France"},
+                     {"Géorgie"},
+                     {"Grande-Bretagne"},
+                     {"Grèce"},
+                     {"Hongrie"},
+                     {"Irlande"},
+                     {"Italie"},
+                     {"Lituanie"},
+                     {"Moldavie"},
+                     {"Norvège"},
+                     {"Pays-Bas"},
+                     {"Pologne"},
+                     {"Portugal"},
+                     {"Roumanie"},
+                     {"Serbie"},
+                     {"Slovaquie"},
+                     {"Slovénie"},
+                     {"Suède"},
+                     {"Suisse"},
+                     {"Tchéquie"},
+                     {"Turquie"},
+                     {"Ukraine"}};
         font.loadFromFile("fonts/leaguespartan-bold.ttf"); // Assurez-vous de charger une police de caractères valide
     }
 
-    void setListPosition(const sf::Vector2f& position) {
+    void setListPosition(const sf::Vector2f &position) {
         listPosition = position;
         showList = true;
     }
@@ -19,26 +54,42 @@ public:
         showList = false;
     }
 
-    void drawList() {
+    void drawInteractiveList() {
         if (showList) {
             sf::Text text;
             text.setFont(font);
             text.setCharacterSize(20);
             text.setFillColor(sf::Color::Black);
             for (size_t i = 0; i < countries.size(); ++i) {
-                text.setString(countries[i]);
+                text.setString(countries[i].getName());
                 text.setPosition(listPosition.x, listPosition.y + static_cast<float>(i) * 30.0f);
+
+                // Afficher le pays de manière interactive
+                if (isMouseOverCountry(text)) {
+                    text.setFillColor(sf::Color::Blue); // Changez la couleur pour indiquer l'interaction
+                    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                        // Vous pouvez ajouter ici le code pour afficher des informations sur le pays
+                        std::cout << "Informations sur le pays : " << countries[i].getName() << std::endl;
+                    }
+                }
+
                 window.draw(text);
             }
         }
     }
 
 private:
-    sf::RenderWindow& window;
-    std::vector<std::string> countries;
+    sf::RenderWindow &window;
+    std::vector<Country> countries;
     sf::Font font;
     sf::Vector2f listPosition;
     bool showList = false;
+
+    bool isMouseOverCountry(const sf::Text &text) {
+        sf::FloatRect bounds = text.getGlobalBounds();
+        sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
+        return bounds.contains(mousePosition);
+    }
 };
 
 class InteractiveMap {
@@ -118,7 +169,7 @@ private:
         }
 
         // Affichage de la liste des pays
-        countryList.drawList();
+        countryList.drawInteractiveList();
 
         // Affichage des changements
         window.display();
