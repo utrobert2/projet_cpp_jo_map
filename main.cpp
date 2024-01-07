@@ -5,9 +5,9 @@
 
 #include "Country.h"
 
-class CountryList {
+class Continent {
 public:
-    CountryList(sf::RenderWindow &window) : window(window) {
+    Continent(sf::RenderWindow &window) : window(window) {
         countries = {{"Allemagne"},
                      {"Armenie"},
                      {"Autriche"},
@@ -45,8 +45,7 @@ public:
         font.loadFromFile("fonts/leaguespartan-bold.ttf"); // Assurez-vous de charger une police de caractères valide
     }
 
-    void setListPosition(const sf::Vector2f &position) {
-        listPosition = position;
+    void setList() {
         showList = true;
     }
 
@@ -62,7 +61,7 @@ public:
             text.setFillColor(sf::Color::Black);
             for (size_t i = 0; i < countries.size(); ++i) {
                 text.setString(countries[i].getName());
-                text.setPosition(listPosition.x, listPosition.y + static_cast<float>(i) * 30.0f);
+                text.setPosition(40, 40 + i * 30);
 
                 // Afficher le pays de manière interactive
                 if (isMouseOverCountry(text)) {
@@ -125,7 +124,7 @@ private:
     sf::Sprite logoSprite;
     float mapScale = 1.0f;
     sf::FloatRect rectangleBounds{1028, 174, 1446 - 1028, 377 - 174};
-    CountryList countryList;
+    Continent countryList;
 
     void handleEvents() {
         sf::Event event;
@@ -140,7 +139,7 @@ private:
 
                     if (rectangleBounds.contains(mousePosition)) {
                         // Afficher la liste des pays
-                        countryList.setListPosition(mousePosition);
+                        countryList.setList();
                     } else {
                         // Cacher la liste si le clic est en dehors de la zone du rectangle
                         countryList.hideList();
@@ -177,6 +176,7 @@ private:
 };
 
 int main() {
+    //Continent Europe();
     InteractiveMap interactiveMap;
     interactiveMap.run();
 
